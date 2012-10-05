@@ -14,17 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import commands
 import os
 
 class WindowControl:
 	desktop = []
 	monitor = []
+	active  = []
 
 	# Class constructor
 	def __init__(self):
 		self.get_screen_size() # set the screen size
+		self.get_active_window_location() # get the current window size
 		
 	# Gathers and stores the screen size
 	def get_screen_size(self):
@@ -46,6 +47,21 @@ class WindowControl:
 				self.desktop.append(int(x[i+1]))
 				self.desktop.append(int(x[i+3]))
 			
+	# Get location of the current window
+	def get_active_window_location(self):
+		
+		# Clear the current window size
+		self.active = []
+		
+		# Collects the id of the current window
+		x = commands.getoutput("xwininfo -id $(xdpyinfo | grep focus | grep -E -o 0x[0-9a-f]+)").split('\n')
+
+		# Get the absolute x and y coordinates and width and height
+		self.active.append(int(x[3].split(':')[1]))
+		self.active.append(int(x[4].split(':')[1]))
+		self.active.append(int(x[7].split(':')[1]))
+		self.active.append(int(x[8].split(':')[1]))
+		
 	# More and resize window			
 	def move(self, x, y, w, h):
 		
@@ -82,15 +98,17 @@ class WindowControl:
 		return p
 			
 	
+	
+	
 def main():
 	print "WinSplit.py Demo"
 	
 	w = WindowControl()
 	print w.desktop
 	print w.monitor
+	print w.active
 	
-	w.move(0,0,0.33,0.5)
-
+	#w.move(0,0,0.33,0.5)
 
 if __name__ == "__main__":
 	main()
