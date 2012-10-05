@@ -64,7 +64,7 @@ class WindowControl:
 		winID=str(process3.communicate()[0],'utf8')
 		process4=subprocess.Popen(["xwininfo","-id", winID],stdout=subprocess.PIPE)
 		x=(str(process4.communicate()[0],'utf8')).split('\n')
-		
+
 		# Get the absolute x and y coordinates and width and height
 		self.active.append(int(x[3].split(':')[1]))
 		self.active.append(int(x[4].split(':')[1]))
@@ -110,8 +110,12 @@ def main():
 	print("WinSplit.py Demo")
 
 	w = WindowControl()
+	print("Desktop Size")
 	print(w.desktop)
+	print("Monitor Details")
 	print(w.monitor)
+	print("Active Window Details")
+	print(w.active)
 
 	#w.move(0,0,0.33,0.5)
 	#w.move(0,0,0.33,0.5)
