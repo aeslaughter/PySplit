@@ -65,50 +65,61 @@ class WindowControl:
 	# More and resize window			
 	def move(self, x, y, w, h):
 		
+		# Determine the active window
 		window = "-r" + ":ACTIVE:"
 		
+		# Compute the position to move to on current screen
 		p = self.compute_position(x, y, w, h)
-		print p		
-		 
+	
+		#print p
+		# Move the window
 		#command = "wmctrl " + window + " -b remove,maximized_vert,maximized_horz"
 		#os.system(command)
+		
 		# resize
 		#command = "wmctrl " + window +  " -e 0,-1,-1," + str(p[2]) + "," + str(p[3])
 		#os.system(command)
+		
 		# move
-		command = "wmctrl " + window +  " -e 0," + str(p[0]) + "," + str(p[1])+ ",-1,-1"
-		os.system(command)
+		#command = "wmctrl " + window +  " -e 0," + str(p[0]) + "," + str(p[1])+ ",-1,-1"
+		#os.system(command)
+		
 		# set properties
-		command = "wmctrl " + window + " -b remove,hidden,shaded"
-		os.system(command)
-		
-		#print active
-		
+		#command = "wmctrl " + window + " -b remove,hidden,shaded"
+		#os.system(command)
 		
 	def compute_position(self, x, y, w, h):
 		
-		s = self.monitor[1]
+		# Get the active window position and screen size
+		a = self.active
+		S = self.monitor
 		
+		# Determine the monitor
+		for i in range(len(S)):
+			s = S[i]
+			if a[0] >= s[2] and a[0] <= (s[2] + s[0]) and a[1] >= s[3] and a[1] <= (s[3] + s[1]):
+				idx = i
+				
+		# Compute the position given the relative position
 		p = []
-		p.append(int(x*s[0]))
-		p.append(int(y*s[1]))
-		p.append(int(w*s[0]))
-		p.append(int(h*s[1]))
+		p.append(int(x*S[idx][0]) + S[idx][2])
+		p.append(int(y*S[idx][1]) + S[idx][3])
+		p.append(int(w*S[idx][0]))
+		p.append(int(h*S[idx][1]))
 		
+		# Return the position
 		return p
-			
-	
-	
-	
+
 def main():
 	print "WinSplit.py Demo"
 	
 	w = WindowControl()
-	print w.desktop
-	print w.monitor
+	#print w.desktop
+	#print w.monitor
 	print w.active
 	
-	#w.move(0,0,0.33,0.5)
+	# Move to upper-right of active monitor
+	w.move(0.5,0,0.5,0.5)
 
 if __name__ == "__main__":
 	main()
